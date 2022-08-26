@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "685597780993",
+    "project_id": "aplikasihrdnsi",
+    "storage_bucket": "aplikasihrdnsi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:685597780993:android:ba1f8136c27f750861e400",
+        "android_client_info": {
+          "package_name": "com.example.flutter_auth"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "685597780993-um3q6vkepamq767gfh71n3gvptrneehl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2TNKHCRDVp-P4dOGIG8Xq6SKdgkVYJBM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "685597780993-um3q6vkepamq767gfh71n3gvptrneehl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
