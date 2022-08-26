@@ -1,6 +1,7 @@
 import 'package:aplikasi_hrd/dashboard/constant.dart';
 import 'package:aplikasi_hrd/dashboard/util/my_box.dart';
 import 'package:aplikasi_hrd/dashboard/util/my_tile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -14,30 +15,35 @@ class MobileScaffold extends StatefulWidget {
 class _MobileScaffoldState extends State<MobileScaffold> {
   @override
   Widget build(BuildContext context) {
+    Future<void> _signOut() async {
+      await FirebaseAuth.instance.signOut();
+    }
 
     return Scaffold(
       backgroundColor: Color(0xFFF1f1f1),
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Color(0xFFF1f1f1),
-        leading: IconButton(
-          onPressed: () {},
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: Color(0xFF22215B),
-          ),
-        ),
+        // leading: IconButton(
+        //   onPressed: () {},
+        //   icon: Icon(
+        //     Icons.arrow_back_ios,
+        //     color: Color(0xFF22215B),
+        //   ),
+        // ),
         title: Text(
-          'My Profile',
+          'User Profile',
           style: TextStyle(
             color: Color(0xFF22215B),
           ),
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: (){
+              _signOut();
+              },
             icon: Icon(
-              Icons.more_horiz,
+              Icons.logout,
               color: Color(0xFF22215B),
             ),
           ),
@@ -92,25 +98,25 @@ class _MobileScaffoldState extends State<MobileScaffold> {
                     ),
                   ],
                 ),
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Container(
-                    width: 60,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      color: Color(0xFFFF317B),
-                      borderRadius: BorderRadius.circular(7),
-                    ),
-                    child: Center(
-                      child: Text(
-                        "PRO",
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                // Align(
+                //   alignment: Alignment.topRight,
+                //   child: Container(
+                //     width: 60,
+                //     height: 30,
+                //     decoration: BoxDecoration(
+                //       color: Color(0xFFFF317B),
+                //       borderRadius: BorderRadius.circular(7),
+                //     ),
+                //     child: Center(
+                //       child: Text(
+                //         "PRO",
+                //         style: TextStyle(
+                //           color: Colors.white,
+                //         ),
+                //       ),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),
@@ -121,7 +127,7 @@ class _MobileScaffoldState extends State<MobileScaffold> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "My Folders",
+                  "Menu",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -148,15 +154,15 @@ class _MobileScaffoldState extends State<MobileScaffold> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CardFolder(
-                  image: Image.asset("assets/icons/folder-415EB6.png"),
-                  title: "Mobile Apps",
-                  date: "December 20.2020",
+                  image: const Icon(Icons.more_time_sharp, size: 25,),
+                  title: "Overtime",
+                  date: "Request Overtime",
                   color: Color(0xFF415EB6),
                 ),
                 CardFolder(
-                  image: Image.asset("assets/icons/folder-FFB110.png"),
-                  title: "SVG Icons",
-                  date: "December 14.2020",
+                  image: const Icon(Icons.card_travel, size: 25,),
+                  title: "Off Work",
+                  date: "Tombol Form Cuti",
                   color: Color(0xFFFFB110),
                 ),
               ],
@@ -169,15 +175,16 @@ class _MobileScaffoldState extends State<MobileScaffold> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 CardFolder(
-                  image: Image.asset("assets/icons/folder-AC4040.png"),
-                  title: "Prototypes",
-                  date: "Novemaber 22.2020",
+                  image: const Icon(Icons.inventory),
+                  title: "Inventaris",
+                  date: "Request Inventaris",
                   color: Color(0xFFAC4040),
                 ),
                 CardFolder(
-                  image: Image.asset("assets/icons/folder-23B0B0.png"),
-                  title: "Avatars",
-                  date: "Novemaber 10.2020",
+                  image: const Icon(Icons.history, size: 25,),
+                  // image: Image.asset("assets/icons/folder-23B0B0.png"),
+                  title: "History",
+                  date: "History Request",
                   color: Color(0xFF23B0B0),
                 ),
               ],
@@ -190,13 +197,13 @@ class _MobileScaffoldState extends State<MobileScaffold> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "Recent Uploads",
+                  "Recent Activity",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Image.asset("assets/icons/sort.png"),
+                // Image.asset("assets/icons/sort.png"),
               ],
             ),
           ),
@@ -205,10 +212,10 @@ class _MobileScaffoldState extends State<MobileScaffold> {
             leading: Container(
               width: 50,
               height: 50,
-              child: Image.asset(
-                "assets/icons/word.png",
-                fit: BoxFit.cover,
-              ),
+              // child: Image.asset(
+              //   "assets/icons/word.png",
+              //   fit: BoxFit.cover,
+              // ),
             ),
             title: Text("Projects.docx"),
             subtitle: Text("Novemaber 22.2020"),
@@ -232,7 +239,7 @@ class CardFolder extends StatelessWidget {
   final String title;
   final String date;
   final Color color;
-  final Image image;
+  final Icon image;
 
   @override
   Widget build(BuildContext context) {
