@@ -1,7 +1,7 @@
-import 'package:aplikasi_hrd/dashboard/constant.dart';
-import 'package:aplikasi_hrd/dashboard/util/my_box.dart';
-import 'package:aplikasi_hrd/dashboard/util/my_tile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:aplikasi_hrd/request/overtime_form.dart';
+import 'package:aplikasi_hrd/request/overtime_message.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,24 +13,20 @@ class MobileScaffold extends StatefulWidget {
 }
 
 class _MobileScaffoldState extends State<MobileScaffold> {
+
   @override
   Widget build(BuildContext context) {
     Future<void> _signOut() async {
       await FirebaseAuth.instance.signOut();
     }
+    final user = FirebaseAuth.instance.currentUser!;
+    final Stream<QuerySnapshot> _message = FirebaseFirestore.instance.collection('overtime').where('stepid', isEqualTo: user.email).snapshots();
 
     return Scaffold(
       backgroundColor: Color(0xFFF1f1f1),
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Color(0xFFF1f1f1),
-        // leading: IconButton(
-        //   onPressed: () {},
-        //   icon: Icon(
-        //     Icons.arrow_back_ios,
-        //     color: Color(0xFF22215B),
-        //   ),
-        // ),
         title: Text(
           'User Profile',
           style: TextStyle(
@@ -40,8 +36,7 @@ class _MobileScaffoldState extends State<MobileScaffold> {
         actions: [
           IconButton(
             onPressed: (){
-              _signOut();
-              },
+              _signOut();},
             icon: Icon(
               Icons.logout,
               color: Color(0xFF22215B),
@@ -61,62 +56,56 @@ class _MobileScaffoldState extends State<MobileScaffold> {
             ),
             child: Stack(
               children: [
-                Column(
-                  children: [
-                    Container(
-                      width: 75,
-                      height: 75,
-                      // child: Image.asset(
-                      //   'assets/images/profile.png',
-                      //   fit: BoxFit.cover,
-                      // ),
-                    ),
-                    SizedBox(height: 15),
-                    Text(
-                      "Neelesh Chaudhary",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF22215B),
-                      ),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      "UI / UX Designer",
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                    SizedBox(height: 15),
-                    Text(
-                      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ornare pretium placerat ut platea.",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Color(0xFF22215B).withOpacity(0.6),
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
+                StreamBuilder<DocumentSnapshot>(
+                  stream: FirebaseFirestore.instance.collection('users').doc(user.uid).snapshots(),
+                  builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                    if(snapshot.hasError){
+                      return Text('Error : ${snapshot.error}');
+                    }
+                    if(snapshot.connectionState == ConnectionState.waiting){
+                      return Text('loading');
+                    }
+                    return Column(
+                      children: [
+                        // Container(
+                        //   width: 75,
+                        //   height: 75,
+                        // ),
+                        SizedBox(height: 15),
+                        Text(
+                          snapshot.data!['nama'],
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF22215B),
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Text(
+                          snapshot.data!['department'],
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                        SizedBox(height: 15),
+                        StreamBuilder<QuerySnapshot>(
+                          stream: _message,
+                          builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+                            
+                            return Text(
+                              "Anda mendapatkan request overtime sebanyak ${streamSnapshot.data?.docs.length}",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Color(0xFF22215B).withOpacity(0.6),
+                                fontSize: 16,
+                              ),
+                            );
+                          }
+                        ),
+                      ],
+                    );
+                  }
                 ),
-                // Align(
-                //   alignment: Alignment.topRight,
-                //   child: Container(
-                //     width: 60,
-                //     height: 30,
-                //     decoration: BoxDecoration(
-                //       color: Color(0xFFFF317B),
-                //       borderRadius: BorderRadius.circular(7),
-                //     ),
-                //     child: Center(
-                //       child: Text(
-                //         "PRO",
-                //         style: TextStyle(
-                //           color: Colors.white,
-                //         ),
-                //       ),
-                //     ),
-                //   ),
-                // ),
               ],
             ),
           ),
@@ -153,11 +142,19 @@ class _MobileScaffoldState extends State<MobileScaffold> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                CardFolder(
-                  image: const Icon(Icons.more_time_sharp, size: 25,),
-                  title: "Overtime",
-                  date: "Request Overtime",
-                  color: Color(0xFF415EB6),
+                InkWell(
+                  onTap: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const RequestOvertime())
+                    );
+                  },
+                  child: CardFolder(
+                    image: const Icon(Icons.more_time_sharp, size: 25,),
+                    title: "Overtime",
+                    date: "Request Overtime",
+                    color: Color(0xFF415EB6),
+                  ),
                 ),
                 CardFolder(
                   image: const Icon(Icons.card_travel, size: 25,),
@@ -180,12 +177,20 @@ class _MobileScaffoldState extends State<MobileScaffold> {
                   date: "Request Inventaris",
                   color: Color(0xFFAC4040),
                 ),
-                CardFolder(
-                  image: const Icon(Icons.history, size: 25,),
-                  // image: Image.asset("assets/icons/folder-23B0B0.png"),
-                  title: "History",
-                  date: "History Request",
-                  color: Color(0xFF23B0B0),
+                InkWell(
+                  onTap: (){
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const OvertimeView())
+                    );
+                  },
+                  child: CardFolder(
+                    image: const Icon(Icons.inbox, size: 25,),
+                    // image: Image.asset("assets/icons/folder-23B0B0.png"),
+                    title: "Inbox",
+                    date: "Inbox Request",
+                    color: Color(0xFF23B0B0),
+                  ),
                 ),
               ],
             ),
